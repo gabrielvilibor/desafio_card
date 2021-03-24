@@ -1,3 +1,4 @@
+import 'package:desafio_card/views/card/card_form_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -40,7 +41,13 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Icon(Icons.add, size: 32, color: Colors.white,),
+            child: InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                    return CardFormPage();
+                  }));
+                },
+                child: Icon(Icons.add, size: 32, color: Colors.white,)),
           )
         ],
       ),
@@ -167,7 +174,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                 side: BorderSide(color: Colors.white, width: 1),
                               ),
                               child: const Text('Editar', style: TextStyle(color: Colors.black, fontSize: 15, letterSpacing: .6),),
-                              onPressed:(){},
+                              onPressed:(){
+                                /*Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                                  return CardFormPage(card: c,);
+                                }));*/ // subir botões com edição
+                              },
                             ),
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
