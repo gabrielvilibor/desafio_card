@@ -1,3 +1,4 @@
+import 'package:desafio_card/views/card/card_form_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,7 +20,12 @@ class _HomePageState extends State<HomePage> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Icon(Icons.add, size: 32, color: Colors.white,),
+            child: InkWell(child: Icon(Icons.add, size: 32, color: Colors.white,),
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                return CardFormPage();
+              }));
+            },),
           )
         ],
       ),
