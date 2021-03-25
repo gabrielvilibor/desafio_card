@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    Navigator.of(context).pushReplacementNamed('/');
+    Navigator.of(context).pushReplacementNamed('/home');
   }
 
   void showFailureLogin() {

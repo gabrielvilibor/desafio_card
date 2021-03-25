@@ -12,4 +12,12 @@ class CardsController{
     }
   }
 
+  Future<bool> deleteCard(int id) async{
+    try{
+      return await ServiceApi().deleteCard(id);
+    }catch(e){
+      return false;
+    }
+  }
+
 }

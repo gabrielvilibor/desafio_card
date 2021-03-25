@@ -20,11 +20,9 @@ class ServiceApi{
       var response = await dio.get('/cards', options: Options(
         headers: headers
       ));
-
-      List list = json.decode(response.data);
-      var teste = list.map<Cards>((e) => Cards.fromMap(e)).toList();
-      print('teste ${teste.length}');
-      return response.statusCode == 200 || response.statusCode == 201 ? list.map<Cards>((e) => Cards.fromMap(e)).toList() : null;
+      var teste = (response.data as List).map((e) => Cards.fromMap(e)).toList();
+      return response.statusCode == 200 || response.statusCode == 201 ? (response.data as List).map((e) => Cards.fromMap(e)).toList()
+          : null;
 
     }catch(e){
       return null;
@@ -44,6 +42,30 @@ class ServiceApi{
       return 'Erro ao buscar o token - ${response.statusCode}';
     }catch(e){
       return e.toString();
+    }
+  }
+
+  Future<bool> deleteCard(int id) async {
+    try{
+
+      var dio = Dio(BaseOptions(baseUrl: base_url, connectTimeout: 100000));
+
+      String access_token = await getToken();
+
+      var headers = {
+        "Authorization": "Bearer " + access_token
+      };
+
+      var response = await dio.delete('/cards/$id', options: Options(
+        headers: headers
+      ));
+
+      if(response.statusCode == 200 || response.statusCode == 201){
+        return true;
+      }
+      return false;
+    }catch(e){
+      return false;
     }
   }
 }

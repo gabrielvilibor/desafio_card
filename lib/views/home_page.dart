@@ -1,5 +1,8 @@
+import 'package:desafio_card/controllers/cards_controller.dart';
 import 'package:desafio_card/models/card_model.dart';
 import 'package:desafio_card/views/card/card_form_page.dart';
+import 'package:desafio_card/widgets/alert.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,19 +15,21 @@ class _HomePageState extends State<HomePage> {
 
   bool animated = false;
 
-  List<Cards>? cards;
+  late Future<List<Cards>?> cards;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    print('ainda cards não funcionaram como esperava, vou perguntar para Edson amanhã, mais facil kkk');
+    _onCreated();
   }
 
-  @override
-  void setState(fn) {
-    // TODO: implement setState
-    super.setState(fn);
+  _onCreated() async{
+    cards = CardsController().fetch();
+  }
+
+  _onRefresh() async{
+    cards = (await CardsController().fetch()) as Future<List<Cards>?>;
   }
 
   @override
@@ -46,7 +51,28 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: _list(),
+      body: RefreshIndicator(
+        onRefresh: () => _onRefresh(),
+        child: FutureBuilder<List<Cards>?>(
+          future: cards,
+          builder: (context, snapshot){
+
+            if(snapshot.hasError){
+              return Center(
+                child: Text('Erro ao carregar a API'),
+              );
+            }
+
+            if(!snapshot.hasData){
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }else{
+              return _list(snapshot.data!);
+            }
+          },
+        ),
+      ),
       drawer: Drawer(
         child: ListView(
           children: [
@@ -86,11 +112,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _list() {
+  _list(List<Cards> cards) {
     return Container(
       child: ListView.builder(
-          itemCount: 5,
+          itemCount: cards.length,
           itemBuilder: (context, index){
+            Cards card = cards[index];
             return Container(
               height: 340,
               padding: EdgeInsets.all(8),
@@ -130,11 +157,11 @@ class _HomePageState extends State<HomePage> {
                                 color: Color.fromRGBO(225, 110, 14, 1),
                                 border: Border.all(color: Color.fromRGBO(0, 18, 50, 1), width: 2),
                               ),
-                              child: Text('${index+1}', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                              child: Text('${card.id}', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                             ),
                             SizedBox(width: 24,),
                             Flexible(
-                              child: Text("Titulo Qualquer para um card beasdasdsadasdasd",
+                              child: Text(card.title.toString(),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 24)),
@@ -146,14 +173,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.only(top: 8, bottom: 8, left: 4, right: 4),
                           height: 150,
                           child: SingleChildScrollView(
-                            child: Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a sollicitudin erat. "
-                                " Pellentesque blandit vulputate augue ac feugiat. "
-                                " Praesent sodales, ipsum pharetra fringilla euismod, mauris massa finibus elit, nec imperdiet ex turpis ut mauris."
-                                " Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. "
-                                "Donec mattis dui quis magna scelerisque, vitae fringilla est pharetra. Nulla dui lorem, dictum "
-                                "quis tincidunt nec, venenatis at justo. Interdum et malesuada fames ac ante ipsum primis in faucibus."
-                                " Curabitur tristique nec ex eget ultrices. Aenean consectetur laoreet metus, congue tincidunt tortor."
-                                " Ut fermentum cursus dolor, porta gravida nisl sollicitudin id. Morbi pellentesque lectus a viverra molestie. Aenean ut sapien ex.",
+                            child: Text(card.content.toString(),
                               style: TextStyle(fontSize: 16, color: Colors.black),
                             ),
                           )
@@ -177,7 +197,13 @@ class _HomePageState extends State<HomePage> {
                                   backgroundColor: Colors.red[300]
                               ),
                               child: const Text('Remover', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),),
-                              onPressed:(){},
+                              onPressed:() async{
+                                bool resposta = await CardsController().deleteCard(card.id!);
+                                if(!resposta){
+                                  alert(context, 'Erro ao deletar', resposta);
+                                }
+                                alert(context, 'Deletado com sucesso!', resposta);
+                              },
                             ),
                           ],
                         ),
