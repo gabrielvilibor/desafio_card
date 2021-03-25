@@ -1,4 +1,3 @@
-import 'package:desafio_card/models/usuario_model.dart';
 import 'package:desafio_card/services/do_login.dart';
 
 class LoginController{

@@ -1,4 +1,4 @@
-import 'package:desafio_card/models/usuario_model.dart';
+import 'package:desafio_card/models/card_model.dart';
 import 'package:desafio_card/views/card/card_form_page.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +11,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   bool animated = false;
+
+  List<Cards>? cards;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print('ainda cards não funcionaram como esperava, vou perguntar para Edson amanhã, mais facil kkk');
+  }
+
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+    super.setState(fn);
+  }
 
   @override
   Widget build(BuildContext context) {
