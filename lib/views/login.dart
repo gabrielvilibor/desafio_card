@@ -1,3 +1,4 @@
+import 'package:desafio_card/controllers/login_controller.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:desafio_card/main.dart';
 import 'package:desafio_card/services/do_login.dart';
@@ -17,15 +18,16 @@ class _LoginPageState extends State<LoginPage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
 
-  String? email;
-  String? pass;
+  String? email  = 'growdev@growdev.com';
+  String? pass = 'growdev@2020';
 
-  void doLogin(ctx) {
+  void doLogin(ctx) async {
     if (!formKey.currentState!.validate()) return;
 
     formKey.currentState?.save();
 
-    final isLogged = Login().doLogin(email: email!, pass: pass!);
+
+    final isLogged = await LoginController().login(email!, pass!);
 
     if (!isLogged) {
       showFailureLogin();

@@ -1,7 +1,9 @@
+import 'package:desafio_card/models/usuario_model.dart';
 import 'package:desafio_card/views/card/card_form_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -38,7 +40,7 @@ class _HomePageState extends State<HomePage> {
                 color: Color.fromRGBO(0, 18, 50, 1),
               ),
               accountName: Text('Nome do Usuário', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: .5),),
-              accountEmail: Text('E-mail@doUsuário'),
+              accountEmail: Text('emaildogrow@growdev.com'),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Color.fromRGBO(43, 56, 91, .9),
                 child: Icon(Icons.person, color: Color.fromRGBO(225, 110, 14, 1), size: 42,),
