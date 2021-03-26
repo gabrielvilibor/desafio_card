@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-alert(BuildContext context, String msg, bool tipoResposta) { // recebe parametros para estourar alerta em tela
+alert(BuildContext context, String msg, bool tipoResposta) {
+  // recebe parametros para estourar alerta em tela
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -14,7 +15,7 @@ alert(BuildContext context, String msg, bool tipoResposta) { // recebe parametro
             OutlinedButton(
               child: Text("OK"),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.of(context).pushReplacementNamed('/home');
               },
             )
           ],

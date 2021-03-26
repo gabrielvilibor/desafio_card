@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:desafio_card/controllers/cards_controller.dart';
 import 'package:desafio_card/models/card_model.dart';
+import 'package:desafio_card/widgets/alert.dart';
 import 'package:desafio_card/widgets/button.dart';
 import 'package:desafio_card/widgets/input_text.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +80,12 @@ class _CardFormPageState extends State<CardFormPage> {
     );
   }
 
-  _onClickSalvar() {
-    print('salvo');
+  _onClickSalvar() async {
+    bool resposta = await CardsController()
+        .createCard(controllerTitulo.text, controllerConteudo.text);
+    if (!resposta) {
+      alert(context, 'Erro ao criar', resposta);
+    }
+    alert(context, 'Criado com sucesso!', resposta);
   }
 }
