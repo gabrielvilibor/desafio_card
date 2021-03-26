@@ -31,9 +31,7 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     email = prefs.getString('email').toString(); // recupera os dados
     user = prefs.getString('user').toString();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   _onRefresh() async {
@@ -100,10 +98,15 @@ class _HomePageState extends State<HomePage> {
               ),
               accountName: Text(
                 user.toString(),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, letterSpacing: .5, color: Colors.white),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: .5,
+                    color: Colors.white),
               ),
-              accountEmail: Text(email.toString(), style: TextStyle(color: Colors.white),),
+              accountEmail: Text(
+                email.toString(),
+                style: TextStyle(color: Colors.white),
+              ),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Color.fromRGBO(43, 56, 91, .9),
                 child: Icon(
@@ -115,14 +118,12 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               onTap: () async {
-
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.setBool('conectado', false);
 
                 setState(() {
                   animated = !animated;
                 });
-
 
                 Navigator.of(context).pushReplacementNamed('/login');
               },
@@ -260,10 +261,12 @@ class _HomePageState extends State<HomePage> {
                                 bool resposta = await CardsController()
                                     .deleteCard(card.id!);
                                 if (!resposta) {
-                                  alert(context, 'Erro ao deletar', resposta);
+                                  alert(context, 'Erro ao deletar', resposta,
+                                      route: '/home');
                                 }
                                 alert(
-                                    context, 'Deletado com sucesso!', resposta);
+                                    context, 'Deletado com sucesso!', resposta,
+                                    route: '/home');
                               },
                             ),
                           ],

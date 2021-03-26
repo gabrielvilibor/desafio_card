@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-alert(BuildContext context, String msg, bool tipoResposta) {
+alert(BuildContext context, String msg, bool tipoResposta, {dynamic route}) {
   // recebe parametros para estourar alerta em tela
   showDialog(
     context: context,
@@ -15,7 +15,7 @@ alert(BuildContext context, String msg, bool tipoResposta) {
             OutlinedButton(
               child: Text("OK"),
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed('/home');
+                Navigator.of(context).pushReplacementNamed('$route');
               },
             )
           ],

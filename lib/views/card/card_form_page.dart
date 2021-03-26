@@ -61,7 +61,8 @@ class _CardFormPageState extends State<CardFormPage> {
               InputText(
                 'Conteúdo',
                 c != null
-                    ? controllerConteudo = TextEditingController(text: c.content)
+                    ? controllerConteudo =
+                        TextEditingController(text: c.content)
                     : controllerConteudo,
                 color: Color.fromRGBO(0, 18, 50, .8),
                 maxLines: 20,
@@ -88,17 +89,17 @@ class _CardFormPageState extends State<CardFormPage> {
     bool resposta = await CardsController()
         .createCard(controllerTitulo.text, controllerConteudo.text);
     if (!resposta) {
-      alert(context, 'Erro ao criar', resposta);
+      alert(context, 'Erro ao criar', resposta, route: '/home');
     }
-    alert(context, 'Criado com sucesso!', resposta);
+    alert(context, 'Criado com sucesso!', resposta, route: '/home');
   }
 
   _onClickEditar() async {
     bool resposta = await CardsController().editCard(
         c!.id!.toInt(), controllerTitulo.text, controllerConteudo.text);
     if (!resposta) {
-      alert(context, 'Erro ao criar', resposta);
+      alert(context, 'Erro ao criar', resposta, route: '/home');
     }
-    alert(context, 'Criado com sucesso!', resposta);
+    alert(context, 'Criado com sucesso!', resposta, route: '/home');
   }
 }

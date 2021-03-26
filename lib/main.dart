@@ -1,4 +1,5 @@
 import 'package:desafio_card/views/card/card_form_page.dart';
+import 'package:desafio_card/views/register_page.dart';
 import 'package:desafio_card/views/home_page.dart';
 import 'package:desafio_card/views/login.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (_) => LoginPage(),
         '/home': (_) => HomePage(),
+        '/register': (_) => RegisterPage(),
       },
     );
   }

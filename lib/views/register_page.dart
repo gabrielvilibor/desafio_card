@@ -1,24 +1,25 @@
 import 'package:desafio_card/controllers/login_controller.dart';
+import 'package:desafio_card/widgets/alert.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:desafio_card/main.dart';
 import 'package:desafio_card/widgets/input.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  RegisterPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   var isLoading = false;
   var manterConectado = false;
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
 
+  String? name;
   String? email;
   String? pass;
 
@@ -26,46 +27,39 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _verificaConectado();
   }
 
-  _verificaConectado() async {
-    SharedPreferences prefs = await SharedPreferences
-        .getInstance(); // Inicializa o shared preferences
-    if (prefs.getBool('conectado') == true) {
-      Navigator.of(context).pushReplacementNamed('/home');
-    }
-  }
-
-  void doLogin(ctx) async {
+  void doRegister(ctx) async {
     if (!formKey.currentState!.validate()) return;
 
     formKey.currentState?.save();
 
-    final isLogged = await LoginController().login(email!, pass!);
+    final isRegistered = await LoginController().register(name!, email!, pass!);
 
     SharedPreferences prefs = await SharedPreferences
         .getInstance(); // Inicializa o shared preferences
+    prefs.setString('name', name!); // cria uma chave no cache do app
     prefs.setString('email', email!); // cria uma chave no cache do app
     prefs.setString('password', pass!);
 
-    if (manterConectado) {
-      prefs.setBool('conectado', true);
-    }
-
-    if (!isLogged) {
-      showFailureLogin();
+    if (!isRegistered) {
+      showFailureRegister();
       return;
     }
-
-    Navigator.of(context).pushReplacementNamed('/home');
+    alert(
+        context,
+        'Conta criada com sucesso! Voce será redirecionado para a pagina de login.',
+        true,
+        route:
+            '/login'); // criei uma prop no alert que recebe a rota, o ideal seria fazer
+    // validação pra saber se existe esse argumento ou não, mas todos alertas apontam pra alguma rota.
   }
 
-  void showFailureLogin() {
+  void showFailureRegister() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Usuário ou senha inválidos, Tente novamente',
+          'Não foi possível criar sua conta',
           style: TextStyle(
             fontSize: 17,
           ),
@@ -121,34 +115,20 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           height: 40,
                         ),
-                        Center(
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Novo por aqui? ',
-                              style: TextStyle(
-                                  letterSpacing: 2,
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    recognizer: new TapGestureRecognizer()
-                                      ..onTap = () {
-                                        Navigator.of(context)
-                                            .pushReplacementNamed('/register');
-                                      },
-                                    text: 'Crie sua conta!',
-                                    style: TextStyle(
-                                        letterSpacing: 2,
-                                        fontSize: 16,
-                                        color: laranjaGrowdev,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          ),
+                        buildInput(
+                          icon: Icons.person,
+                          label: 'Nome',
+                          validator: (value) {
+                            if (value!.length < 3) {
+                              return 'Digite um nome válido';
+                            }
+
+                            return null;
+                          },
+                          onSaved: (value) => name = value,
                         ),
                         SizedBox(
-                          height: 40,
+                          height: 20,
                         ),
                         buildInput(
                           icon: Icons.email,
@@ -167,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         buildInput(
                           icon: Icons.lock,
-                          label: 'Password',
+                          label: 'Senha',
                           obscureText: true,
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -179,42 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                           onSaved: (value) => pass = value,
                         ),
                         SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 25,
-                            ),
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration:
-                                  BoxDecoration(color: Colors.blueGrey[600]),
-                              child: IconButton(
-                                icon: Icon(
-                                  manterConectado ? Icons.check : null,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    manterConectado = !manterConectado;
-                                  });
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Text(
-                              'Mantenha-me conectado',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         Align(
                           child: Container(
@@ -223,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Builder(builder: (ctx) {
                               return ElevatedButton(
                                 onPressed:
-                                    isLoading ? null : () => doLogin(ctx),
+                                    isLoading ? null : () => doRegister(ctx),
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100),
@@ -233,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                                 child: isLoading
                                     ? CircularProgressIndicator()
                                     : Text(
-                                        'Entrar',
+                                        'Criar conta',
                                         style: TextStyle(
                                           fontSize: 20,
                                           color: Colors.white,
