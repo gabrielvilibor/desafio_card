@@ -20,7 +20,6 @@ class _CardFormPageState extends State<CardFormPage> {
 
   var controllerTitulo = TextEditingController();
   var controllerConteudo = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +49,9 @@ class _CardFormPageState extends State<CardFormPage> {
             children: [
               InputText(
                 'Título',
-                controllerTitulo,
+                c != null
+                    ? controllerTitulo = TextEditingController(text: c.title)
+                    : controllerTitulo,
                 color: Color.fromRGBO(0, 18, 50, .8),
                 maxLines: 1,
               ),
@@ -59,7 +60,9 @@ class _CardFormPageState extends State<CardFormPage> {
               ),
               InputText(
                 'Conteúdo',
-                controllerConteudo,
+                c != null
+                    ? controllerConteudo = TextEditingController(text: c.title)
+                    : controllerConteudo,
                 color: Color.fromRGBO(0, 18, 50, .8),
                 maxLines: 20,
               ),
@@ -68,7 +71,8 @@ class _CardFormPageState extends State<CardFormPage> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Button(_onClickSalvar, 'Cadastrar'),
+                      child: Button(c != null ? _onClickEditar : _onClickSalvar,
+                          'Cadastrar'),
                     ),
                   ],
                 ),
@@ -83,6 +87,15 @@ class _CardFormPageState extends State<CardFormPage> {
   _onClickSalvar() async {
     bool resposta = await CardsController()
         .createCard(controllerTitulo.text, controllerConteudo.text);
+    if (!resposta) {
+      alert(context, 'Erro ao criar', resposta);
+    }
+    alert(context, 'Criado com sucesso!', resposta);
+  }
+
+  _onClickEditar() async {
+    bool resposta = await CardsController().editCard(
+        c!.id!.toInt(), controllerTitulo.text, controllerConteudo.text);
     if (!resposta) {
       alert(context, 'Erro ao criar', resposta);
     }

@@ -25,4 +25,13 @@ class CardsController {
       return false;
     }
   }
+
+  Future<bool> editCard(int id, String title, String content) async {
+    try {
+      return await ServiceApi().editCard(id, title, content);
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

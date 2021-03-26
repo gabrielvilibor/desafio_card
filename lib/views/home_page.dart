@@ -6,13 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   bool animated = false;
 
   late Future<List<Cards>?> cards;
@@ -24,11 +22,11 @@ class _HomePageState extends State<HomePage> {
     _onCreated();
   }
 
-  _onCreated() async{
+  _onCreated() async {
     cards = CardsController().fetch();
   }
 
-  _onRefresh() async{
+  _onRefresh() async {
     cards = (await CardsController().fetch()) as Future<List<Cards>?>;
   }
 
@@ -38,16 +36,27 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(0, 18, 50, 1),
-        title: Text('Cards', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),),
+        title: Text(
+          'Cards',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: InkWell(child: Icon(Icons.add, size: 32, color: Colors.white,),
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                return CardFormPage();
-              }));
-            },),
+            child: InkWell(
+              child: Icon(
+                Icons.add,
+                size: 32,
+                color: Colors.white,
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                  return CardFormPage();
+                }));
+              },
+            ),
           )
         ],
       ),
@@ -55,19 +64,18 @@ class _HomePageState extends State<HomePage> {
         onRefresh: () => _onRefresh(),
         child: FutureBuilder<List<Cards>?>(
           future: cards,
-          builder: (context, snapshot){
-
-            if(snapshot.hasError){
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
               return Center(
                 child: Text('Erro ao carregar a API'),
               );
             }
 
-            if(!snapshot.hasData){
+            if (!snapshot.hasData) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            }else{
+            } else {
               return _list(snapshot.data!);
             }
           },
@@ -80,11 +88,19 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 color: Color.fromRGBO(0, 18, 50, 1),
               ),
-              accountName: Text('Nome do Usuário', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: .5),),
+              accountName: Text(
+                'Nome do Usuário',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, letterSpacing: .5),
+              ),
               accountEmail: Text('emaildogrow@growdev.com'),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Color.fromRGBO(43, 56, 91, .9),
-                child: Icon(Icons.person, color: Color.fromRGBO(225, 110, 14, 1), size: 42,),
+                child: Icon(
+                  Icons.person,
+                  color: Color.fromRGBO(225, 110, 14, 1),
+                  size: 42,
+                ),
               ),
             ),
             ListTile(
@@ -96,13 +112,15 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.logout),
               title: AnimatedDefaultTextStyle(
                 child: Text('Sair'),
-                style : animated ? TextStyle(
-                  color: Colors.redAccent,
-                  fontSize: 26,
-                ) : TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                ),
+                style: animated
+                    ? TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 26,
+                      )
+                    : TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
                 duration: Duration(milliseconds: 200),
               ),
             ),
@@ -116,7 +134,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       child: ListView.builder(
           itemCount: cards.length,
-          itemBuilder: (context, index){
+          itemBuilder: (context, index) {
             Cards card = cards[index];
             return Container(
               height: 340,
@@ -141,11 +159,7 @@ class _HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(
-                                    color: Colors.black26,
-                                    width: 3
-                                )
-                            )
-                        ),
+                                    color: Colors.black26, width: 3))),
                         child: Row(
                           children: [
                             Container(
@@ -155,11 +169,19 @@ class _HomePageState extends State<HomePage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(60),
                                 color: Color.fromRGBO(225, 110, 14, 1),
-                                border: Border.all(color: Color.fromRGBO(0, 18, 50, 1), width: 2),
+                                border: Border.all(
+                                    color: Color.fromRGBO(0, 18, 50, 1),
+                                    width: 2),
                               ),
-                              child: Text('${card.id}', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                              child: Text('${card.id}',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold)),
                             ),
-                            SizedBox(width: 24,),
+                            SizedBox(
+                              width: 24,
+                            ),
                             Flexible(
                               child: Text(card.title.toString(),
                                   maxLines: 1,
@@ -170,14 +192,16 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ), // fim container da column
                       Container(
-                          padding: EdgeInsets.only(top: 8, bottom: 8, left: 4, right: 4),
+                          padding: EdgeInsets.only(
+                              top: 8, bottom: 8, left: 4, right: 4),
                           height: 150,
                           child: SingleChildScrollView(
-                            child: Text(card.content.toString(),
-                              style: TextStyle(fontSize: 16, color: Colors.black),
+                            child: Text(
+                              card.content.toString(),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
                             ),
-                          )
-                      ),
+                          )),
                       ButtonBarTheme(
                         key: UniqueKey(),
                         data: ButtonBarThemeData(),
@@ -188,21 +212,41 @@ class _HomePageState extends State<HomePage> {
                               style: OutlinedButton.styleFrom(
                                 side: BorderSide(color: Colors.white, width: 1),
                               ),
-                              child: const Text('Editar', style: TextStyle(color: Colors.black, fontSize: 15, letterSpacing: .6),),
-                              onPressed:(){},
+                              child: const Text(
+                                'Editar',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    letterSpacing: .6),
+                              ),
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                  return CardFormPage(
+                                    card: card,
+                                  );
+                                }));
+                              },
                             ),
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                   side: BorderSide(color: Colors.red, width: 1),
-                                  backgroundColor: Colors.red[300]
+                                  backgroundColor: Colors.red[300]),
+                              child: const Text(
+                                'Remover',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
                               ),
-                              child: const Text('Remover', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),),
-                              onPressed:() async{
-                                bool resposta = await CardsController().deleteCard(card.id!);
-                                if(!resposta){
+                              onPressed: () async {
+                                bool resposta = await CardsController()
+                                    .deleteCard(card.id!);
+                                if (!resposta) {
                                   alert(context, 'Erro ao deletar', resposta);
                                 }
-                                alert(context, 'Deletado com sucesso!', resposta);
+                                alert(
+                                    context, 'Deletado com sucesso!', resposta);
                               },
                             ),
                           ],

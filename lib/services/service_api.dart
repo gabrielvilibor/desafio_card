@@ -82,4 +82,25 @@ class ServiceApi {
       return false;
     }
   }
+
+  Future<bool> editCard(int id, String title, String content) async {
+    try {
+      var dio = Dio(BaseOptions(baseUrl: base_url, connectTimeout: 100000));
+
+      String access_token = await getToken();
+
+      var headers = {"Authorization": "Bearer " + access_token};
+
+      var response = await dio.put('/cards/$id',
+          options: Options(headers: headers),
+          data: {"title": title, "content": content});
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
 }
