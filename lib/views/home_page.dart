@@ -31,6 +31,9 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     email = prefs.getString('email').toString(); // recupera os dados
     user = prefs.getString('user').toString();
+    setState(() {
+
+    });
   }
 
   _onRefresh() async {
