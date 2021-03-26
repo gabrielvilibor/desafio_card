@@ -1,9 +1,9 @@
 import 'package:desafio_card/controllers/login_controller.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:desafio_card/main.dart';
-import 'package:desafio_card/services/do_login.dart';
 import 'package:desafio_card/widgets/input.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -18,16 +18,37 @@ class _LoginPageState extends State<LoginPage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
 
-  String? email  = 'growdev@growdev.com';
-  String? pass = 'growdev@2020';
+  String? email;
+  String? pass;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _verificaConectado();
+  }
+
+  _verificaConectado() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance(); // Inicializa o shared preferences
+    if(prefs.getBool('conectado') == true){
+      Navigator.of(context).pushReplacementNamed('/home');
+    }
+  }
 
   void doLogin(ctx) async {
     if (!formKey.currentState!.validate()) return;
 
     formKey.currentState?.save();
 
-
     final isLogged = await LoginController().login(email!, pass!);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance(); // Inicializa o shared preferences
+    prefs.setString('email',email!); // cria uma chave no cache do app
+    prefs.setString('password',pass!);
+
+    if(manterConectado){
+      prefs.setBool('conectado', true);
+    }
 
     if (!isLogged) {
       showFailureLogin();

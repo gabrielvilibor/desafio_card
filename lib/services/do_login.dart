@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:desafio_card/models/usuario_model.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginService {
 
@@ -16,6 +17,8 @@ class LoginService {
 
       if(response.statusCode == 200 || response.statusCode == 201){ // coloquei o if para fazer a deuparação dos dados e salvar na classe usuario
         Usuario u = Usuario.fromJson(response.data['user']);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('user', u.name.toString());
         return true;
       }
       return false;

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:desafio_card/models/card_model.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceApi {
   var base_url = 'https://api-cards-growdev.herokuapp.com';
@@ -16,7 +17,6 @@ class ServiceApi {
 
       var response =
           await dio.get('/cards', options: Options(headers: headers));
-      var teste = (response.data as List).map((e) => Cards.fromMap(e)).toList();
       return response.statusCode == 200 || response.statusCode == 201
           ? (response.data as List).map((e) => Cards.fromMap(e)).toList()
           : null;
@@ -28,10 +28,10 @@ class ServiceApi {
   Future<String> getToken() async {
     try {
       var dio = Dio(BaseOptions(baseUrl: base_url, connectTimeout: 100000));
-      String email = "growdev@growdev.com";
-      String pass = "growdev@2020";
+
+      SharedPreferences prefs = await SharedPreferences.getInstance(); // inicializa a classe
       var response =
-          await dio.post('/login', data: {"email": email, "password": pass});
+          await dio.post('/login', data: {"email": prefs.getString('email'), "password": prefs.getString('password')}); // recupera os dados e retorna o token
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response.data['token'];

@@ -61,7 +61,7 @@ class _CardFormPageState extends State<CardFormPage> {
               InputText(
                 'Conteúdo',
                 c != null
-                    ? controllerConteudo = TextEditingController(text: c.title)
+                    ? controllerConteudo = TextEditingController(text: c.content)
                     : controllerConteudo,
                 color: Color.fromRGBO(0, 18, 50, .8),
                 maxLines: 20,

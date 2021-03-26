@@ -4,6 +4,7 @@ import 'package:desafio_card/views/card/card_form_page.dart';
 import 'package:desafio_card/widgets/alert.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,6 +16,9 @@ class _HomePageState extends State<HomePage> {
 
   late Future<List<Cards>?> cards;
 
+  String user = "";
+  String email = "";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -24,6 +28,9 @@ class _HomePageState extends State<HomePage> {
 
   _onCreated() async {
     cards = CardsController().fetch();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    email = prefs.getString('email').toString(); // recupera os dados
+    user = prefs.getString('user').toString();
   }
 
   _onRefresh() async {
@@ -89,11 +96,11 @@ class _HomePageState extends State<HomePage> {
                 color: Color.fromRGBO(0, 18, 50, 1),
               ),
               accountName: Text(
-                'Nome do Usuário',
+                user.toString(),
                 style:
-                    TextStyle(fontWeight: FontWeight.bold, letterSpacing: .5),
+                    TextStyle(fontWeight: FontWeight.bold, letterSpacing: .5, color: Colors.white),
               ),
-              accountEmail: Text('emaildogrow@growdev.com'),
+              accountEmail: Text(email.toString(), style: TextStyle(color: Colors.white),),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Color.fromRGBO(43, 56, 91, .9),
                 child: Icon(
@@ -104,10 +111,17 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ListTile(
-              onTap: () {
+              onTap: () async {
+
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setBool('conectado', false);
+
                 setState(() {
                   animated = !animated;
                 });
+
+
+                Navigator.of(context).pushReplacementNamed('/login');
               },
               leading: Icon(Icons.logout),
               title: AnimatedDefaultTextStyle(
